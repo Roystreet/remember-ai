@@ -3,16 +3,23 @@
 :root {
   --color-canvas: #ffffff;
   --color-surface: #f3f5ff;
+  --color-surface-strong: #eef2ff;
   --color-border: #e5e7eb;
   --color-text: #181c31;
   --color-muted: #757693;
   --color-primary: #4457ff;
+  --color-success: #22a06b;
+  --color-danger: #c2410c;
   --gradient-primary: linear-gradient(90deg, #4457ff 0%, #7583fd 100%);
+  --gradient-soft: linear-gradient(180deg, #f8f9ff 0%, #e6edff 100%);
   --phone-width: min(100%, 430px);
 }
 
 body {
-  background: radial-gradient(circle at top right, #eef2ff 0%, #f8f9ff 28%, #ffffff 65%);
+  background:
+    radial-gradient(circle at 88% 8%, #dce6ff 0%, #eef2ff 20%, rgba(255, 255, 255, 0) 50%),
+    radial-gradient(circle at 8% 92%, #eff3ff 0%, rgba(255, 255, 255, 0) 45%),
+    #f8faff;
   color: var(--color-text);
   font-family: var(--font-geist-sans), sans-serif;
 }
@@ -27,16 +34,61 @@ body {
   min-height: 100dvh;
   background: var(--color-canvas);
   border: 1px solid var(--color-border);
-  box-shadow: 0 24px 80px rgba(24, 28, 49, 0.12);
+  box-shadow:
+    0 28px 90px rgba(24, 28, 49, 0.12),
+    0 8px 24px rgba(24, 28, 49, 0.08);
 }
 
 .surface-card {
-  background: var(--color-surface);
+  background: var(--gradient-soft);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+}
+
+.soft-card {
+  background: var(--color-canvas);
   border: 1px solid var(--color-border);
   border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(24, 28, 49, 0.06);
 }
 
 .gradient-button {
   background: var(--gradient-primary);
   color: #ffffff;
+  box-shadow: 0 10px 24px rgba(68, 87, 255, 0.33);
+}
+
+.screen-title {
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+}
+
+.status-pill[data-status="listo"] {
+  border-color: #b2e3cd;
+  color: #0a6f45;
+  background: #ecfdf3;
+}
+
+.status-pill[data-status="procesando"] {
+  border-color: #c7d2fe;
+  color: #3545d3;
+  background: #eef2ff;
 }

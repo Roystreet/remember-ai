@@ -32,6 +32,12 @@ export default function ProcessPage() {
       <section className="pt-5 space-y-4">
         <ProcessStepper steps={steps} currentStep={currentStep} progress={progress} />
         <ImagePreview originalSrc={resultMock.originalSrc} restoredSrc={resultMock.restoredSrc} />
+        <article className="soft-card p-4">
+          <p className="text-sm font-medium">Que estamos mejorando ahora</p>
+          <p className="text-xs text-[var(--color-muted)] mt-1">
+            Limpieza de ruido, recuperacion de textura y balance de color para salida en alta calidad.
+          </p>
+        </article>
       </section>
     </AppShell>
   );
