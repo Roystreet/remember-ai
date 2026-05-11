@@ -1,4 +1,6 @@
 import { Buffer } from "node:buffer";
+import { xai } from "@ai-sdk/xai";
+import { generateImage } from "ai";
 
 import { getFile } from "../../../../helpers/files/getFile.js";
 import { getPromptPath } from "../../../../helpers/prompts/getPromptPath.js";
@@ -7,7 +9,6 @@ import { markdownToString } from "../../../../helpers/texts/markdownToString.js"
 export const runtime = "nodejs";
 
 const MAX_IMAGE_SIZE = 20 * 1024 * 1024;
-const XAI_IMAGE_EDIT_URL = "https://api.x.ai/v1/images/edits";
 
 function getImageMimeType(file, fallback = "image/png") {
   return file?.type || fallback;
@@ -52,30 +53,6 @@ async function getImagePayload(request) {
   };
 }
 
-function getGeneratedImageData(payload) {
-  const generatedImage = payload?.data?.[0] ?? payload?.image ?? payload;
-  const base64 = generatedImage?.b64_json ?? generatedImage?.base64;
-  const url = generatedImage?.url;
-
-  if (base64) {
-    return {
-      base64,
-      mimeType: "image/png",
-      dataUrl: `data:image/png;base64,${base64}`,
-    };
-  }
-
-  if (url) {
-    return {
-      base64: null,
-      mimeType: "image/png",
-      dataUrl: url,
-    };
-  }
-
-  throw new Error("xAI did not return an image.");
-}
-
 export async function POST(request) {
   try {
     if (!process.env.XAI_API_KEY) {
@@ -88,40 +65,36 @@ export async function POST(request) {
     const promptPath = getPromptPath("images", "RestoreImage.md");
     const promptBuffer = await getFile(promptPath);
     const prompt = await markdownToString(promptBuffer);
-    const { buffer, mimeType } = await getImagePayload(request);
-    const base64Image = buffer.toString("base64");
-    const imageUrl = `data:${mimeType};base64,${base64Image}`;
+    const { buffer } = await getImagePayload(request);
 
-    const xaiResponse = await fetch(XAI_IMAGE_EDIT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.XAI_API_KEY}`,
+    const { image } = await generateImage({
+      model: xai.image("grok-imagine-image-quality"),
+      prompt: {
+        text: prompt,
+        images: [buffer],
       },
-      body: JSON.stringify({
-        model: "grok-imagine-image-quality",
-        n: 1,
-        aspect_ratio: "auto",
-        resolution: "1k",
-        image: {
-          url: imageUrl,
+      n: 1,
+      providerOptions: {
+        xai: {
+          aspect_ratio: "auto",
+          resolution: "1k",
         },
-        prompt,
-      }),
+      },
     });
 
-    const payload = await xaiResponse.json();
-
-    if (!xaiResponse.ok) {
-      throw new Error(
-        payload?.error?.message || payload?.message || "xAI image restoration failed.",
-      );
+    if (!image?.base64) {
+      throw new Error("xAI did not return base64 image data.");
     }
 
-    const image = getGeneratedImageData(payload);
+    const normalizedMimeType = image.mediaType || "image/png";
+    const normalizedBase64 = image.base64;
 
     return Response.json({
-      image,
+      image: {
+        base64: normalizedBase64,
+        mimeType: normalizedMimeType,
+        dataUrl: `data:${normalizedMimeType};base64,${normalizedBase64}`,
+      },
       request: {
         model: "grok-imagine-image-quality",
         aspectRatio: "auto",
