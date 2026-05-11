@@ -86,12 +86,27 @@ export default function UploadCard() {
         <span className="status-pill">Paso 1</span>
       </div>
       <label className="block text-sm font-medium mb-2">Selecciona una foto</label>
+      <div className="flex items-center gap-3">
+        <label
+          htmlFor="upload-photo-input"
+          className={`inline-flex cursor-pointer items-center rounded-lg border px-4 py-2 text-sm font-medium transition ${isRestoring
+              ? "cursor-not-allowed border-[var(--color-border)] bg-gray-100 text-[var(--color-muted)]"
+              : "border-[var(--color-border)] bg-white hover:bg-gray-50"
+            }`}
+        >
+          {selectedFile ? "Cambiar foto" : "Seleccionar foto"}
+        </label>
+        <span className="text-xs text-[var(--color-muted)]">
+          {selectedFile ? `Archivo: ${selectedFile.name}` : "Ningun archivo seleccionado"}
+        </span>
+      </div>
       <input
+        id="upload-photo-input"
         type="file"
         accept="image/*"
         onChange={onFileChange}
         disabled={isRestoring}
-        className="w-full text-sm"
+        className="sr-only"
       />
       {previewUrl ? (
         <Image
@@ -100,7 +115,7 @@ export default function UploadCard() {
           width={960}
           height={720}
           unoptimized
-          className="mt-4 h-52 w-full rounded-xl object-cover border border-[var(--color-border)]"
+          className="mt-4 h-52 w-full rounded-xl object-contain bg-[var(--color-surface)] border border-[var(--color-border)]"
         />
       ) : (
         <div className="mt-4 h-52 w-full rounded-xl border border-dashed border-[var(--color-border)] bg-white grid place-content-center text-center px-4">
@@ -109,7 +124,7 @@ export default function UploadCard() {
         </div>
       )}
       {error ? <p className="mt-3 text-sm font-medium text-[var(--color-danger)]">{error}</p> : null}
-      <PrimaryButton className="mt-4" onClick={onRestore} disabled={isRestoring}>
+      <PrimaryButton className="mt-4 cursor-pointer" onClick={onRestore} disabled={isRestoring}>
         {isRestoring ? "Restaurando imagen..." : "Iniciar restauracion"}
       </PrimaryButton>
     </section>

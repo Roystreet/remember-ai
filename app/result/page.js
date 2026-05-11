@@ -48,12 +48,12 @@ export default function ResultPage() {
         <ImagePreview
           originalSrc={result.originalSrc}
           restoredSrc={result.restoredSrc}
-          mode="single"
+          mode="stack"
         />
         <div className="soft-card p-3">
-          <p className="text-sm font-medium">Vista previa final</p>
+          <p className="text-sm font-medium">Comparacion antes y despues</p>
           <p className="text-xs text-[var(--color-muted)] mt-1">
-            Puedes descargarla, guardarla en historial o compartirla directamente.
+            Revisa los cambios entre la imagen original y la restaurada, ambas en vista completa.
           </p>
         </div>
         <AIBadge />

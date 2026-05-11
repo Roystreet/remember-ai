@@ -10,7 +10,7 @@ export default function ImagePreview({ originalSrc, restoredSrc, mode = "stack" 
           width={600}
           height={420}
           unoptimized
-          className="h-72 w-full object-cover rounded-xl bg-[var(--color-surface)]"
+          className="h-72 w-full object-contain rounded-xl bg-[var(--color-surface)]"
         />
       </div>
     );
@@ -26,7 +26,7 @@ export default function ImagePreview({ originalSrc, restoredSrc, mode = "stack" 
           width={600}
           height={420}
           unoptimized
-          className="h-40 w-full object-cover rounded-xl bg-[var(--color-surface)]"
+          className="h-52 w-full object-contain rounded-xl bg-[var(--color-surface)]"
         />
       </div>
       <div className="soft-card p-2">
@@ -37,7 +37,7 @@ export default function ImagePreview({ originalSrc, restoredSrc, mode = "stack" 
           width={600}
           height={420}
           unoptimized
-          className="h-40 w-full object-cover rounded-xl bg-[var(--color-surface)]"
+          className="h-52 w-full object-contain rounded-xl bg-[var(--color-surface)]"
         />
       </div>
     </div>
